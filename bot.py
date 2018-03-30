@@ -11,9 +11,6 @@ import threading
 import time
 
 t = None
-timetoadd = 1
-
-
 
 logger = logging.getLogger('discord')
 logger.setLevel(logging.DEBUG)
@@ -64,7 +61,7 @@ async def on_voice_state_update(before, after):
             getnewdata = tb.search(Query().uid == after.id)
             getnewstartpoint = getnewdata[0]['time']
             timetoaddit = getnewstartpoint
-            timetoaddit += timetoadd
+            timetoaddit += 1
             print(str(timetoaddit) + ' ' + str(after.name))
             final_time = timetoaddit
             tb.update({'time': final_time}, where('time') == getnewstartpoint )
@@ -72,14 +69,11 @@ async def on_voice_state_update(before, after):
             t.start()
         countlifepersecond()
 
-    elif str(after.voice_channel) != "None":
-        print(after.name + " moved to " + str(after.voice_channel))
-
     elif str(after.voice_channel) == "None":
         t.cancel()
         print(after.name + " left " + str(before.voice_channel))
     else:
-        print("something wrong")
+        return
 
 
 @client.command(pass_context = True)
